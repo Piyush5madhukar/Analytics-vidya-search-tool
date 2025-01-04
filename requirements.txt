@@ -1,0 +1,8 @@
+langchain 
+google-generativeai 
+faiss-cpu 
+pandas
+# GoogleGenerativeAIEmbeddings
+langchain_google_genai
+langchain-community
+load_dotenv
