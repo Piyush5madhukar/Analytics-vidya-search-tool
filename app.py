@@ -22,14 +22,49 @@ metrics = {
     "document_processing_time": 0.0,
 }
 
+# # Function to read CSV and prepare data
+# def load_csv_data(csv_file_path):
+#     """Load data from a CSV file."""
+#     start_time = time.time()
+#     data = pd.read_csv(csv_file_path)
+#     combined_texts = (data['Course Title'] + " " + data['Course Description'] + " " + data['Course curricullum']).tolist()
+#     metrics["document_processing_time"] = time.time() - start_time
+#     return combined_texts
+
 # Function to read CSV and prepare data
 def load_csv_data(csv_file_path):
-    """Load data from a CSV file."""
+    """Load and extract text data from a CSV file."""
     start_time = time.time()
-    data = pd.read_csv(csv_file_path)
-    combined_texts = (data['Course Title'] + " " + data['Course Description'] + " " + data['Course curricullum']).tolist()
-    metrics["document_processing_time"] = time.time() - start_time
-    return combined_texts
+    try:
+        # Load CSV file into a DataFrame
+        data = pd.read_csv(csv_file_path)
+        
+        # Required columns
+        required_columns = ['Course Title', 'Course Description', 'Course Curriculum']
+        
+        # Check for missing columns and warn
+        missing_columns = [col for col in required_columns if col not in data.columns]
+        # if missing_columns:
+        #     st.warning(f"Missing columns in CSV file: {', '.join(missing_columns)}. Processing available columns.")
+
+        # Extract available text columns
+        available_columns = [col for col in required_columns if col in data.columns]
+        if not available_columns:
+            raise ValueError("No valid text columns found in the CSV file.")
+
+        # Combine text from available columns and clean it
+        combined_texts = data[available_columns].fillna("").apply(" ".join, axis=1).tolist()
+        combined_texts = [text.strip() for text in combined_texts if text.strip()]
+
+        if not combined_texts:
+            raise ValueError("No valid text data found after processing.")
+
+        metrics["document_processing_time"] = time.time() - start_time
+        return combined_texts
+
+    except Exception as e:
+        st.error(f"Error processing the CSV file: {e}")
+        return []
 
 # Function to split text into manageable chunks
 def get_text_chunks(texts):
