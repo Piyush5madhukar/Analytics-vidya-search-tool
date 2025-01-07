@@ -1,1 +1,1 @@
-live link:https://analytics-vidya-search-tool-etryyjdkcaychjepnv27hq.streamlit.app/
+live link:https://analytics-vidya-search-tool-gnl6mkknxrucyrf5rgmdr4.streamlit.app/
